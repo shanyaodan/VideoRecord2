@@ -45,6 +45,7 @@ public class CameraCapture implements GLRender.RenderListener, SurfaceTexture.On
     private int mTargetWidth,mTargetHeight;
     private int mTargetResolution;
     private int mPreviewResolution;
+    private int cameraId =Camera.CameraInfo.CAMERA_FACING_BACK;
 
     public CameraCapture() {
         mCameraManager = new CameraManager();
@@ -89,8 +90,9 @@ public class CameraCapture implements GLRender.RenderListener, SurfaceTexture.On
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         L.e(TAG, "onSurfaceChanged");
-        surfaceChanged = true;
+
         mCameraManager.setRenderSize(width,height);
+        surfaceChanged = true;
         renderWidth =width;
         renderHeight = height;
         if(previewStarted){
@@ -211,6 +213,36 @@ public class CameraCapture implements GLRender.RenderListener, SurfaceTexture.On
                 return 720;
         }
     }
+    public void setRotateDegrees(int i) {
 
+        mCameraManager.setDisplayOrientation(i);
 
+    }
+
+    public int getRoateDegrees() {
+        return mCameraManager.getRoateDegrees();
+    }
+
+    public void switchCamera() {
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        int  cameraCount = Camera.getNumberOfCameras();//得到摄像头的个数
+        if (cameraCount <= 1) {
+            return;
+        }
+        for (int i = 0; i < cameraCount; i++) {
+            Camera.getCameraInfo(i, cameraInfo);//得到每一个摄像头的信息
+            if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+                break;
+            } else {
+                if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {//代表摄像头的方位，CAMERA_FACING_FRONT前置      CAMERA_FACING_BACK后置
+                    cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+                    break;
+                }
+            }
+        }
+        mCameraManager.release();
+        start(cameraId);
+
+    }
 }

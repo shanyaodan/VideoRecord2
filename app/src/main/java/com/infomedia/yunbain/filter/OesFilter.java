@@ -65,7 +65,7 @@ public class OesFilter extends BaseFilter {
                 "}";
 
 
-        String vert = "attribute highp vec4 vPosition;\n" +
+        String vert = "attribute highp vec2 vPosition;\n" +
                 "attribute highp vec4 vCoord;\n" +
                 "uniform mat4 vMatrix;\n" +
                 "uniform mat4 uTexMatrix;\n" +
@@ -73,7 +73,7 @@ public class OesFilter extends BaseFilter {
                 "varying highp vec2 textureCoordinate;\n" +
                 "\n" +
                 "void main(){\n" +
-                " gl_Position = vMatrix*vPosition;\n" +
+                " gl_Position = vMatrix*vec4(vPosition,0,1);\n" +
                 " textureCoordinate = (uTexMatrix*vCoord).xy;\n" +
                 "}";
 //          program = loadShader(vert,frag);
@@ -112,11 +112,7 @@ public class OesFilter extends BaseFilter {
     @Override
     public void onSurFaceChanged(int width, int height) {
         super.onSurFaceChanged(width, height);
-
-
     }
-
-
     /**
      * draw specific texture with specific texture matrix
      *
@@ -126,7 +122,7 @@ public class OesFilter extends BaseFilter {
     public void draw(final int tex_id, final float[] tex_matrix) {
         super.draw(tex_id,tex_matrix);
         GLES20.glUseProgram(program);
-        if (tex_matrix != null)
+        if (tex_matrix != null)//TODO  ==null   的时候return
          GLES20.glUniformMatrix4fv(mvpTexHandler, 1, false, tex_matrix, 0);
         Glutil.checkGlError("glUniformMatrix4fv");
         GLES20.glUniformMatrix4fv(mvpMatrixHandler, 1, false, IDENTITY_MATRIX, 0);
@@ -139,7 +135,6 @@ public class OesFilter extends BaseFilter {
         Glutil.checkGlError("glDrawArrays");
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
         GLES20.glUseProgram(0);
-
     }
 
 //    @Override

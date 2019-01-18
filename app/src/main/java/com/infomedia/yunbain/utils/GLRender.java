@@ -27,19 +27,14 @@ public class GLRender {
         glSurfaceView.setEGLContextClientVersion(2);
         glSurfaceView.setRenderer(renderer);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-
         glDrawer2D = new GLDrawer2D();
         init = true;
     }
-
     public SurfaceTexture getSurfaceTexture(){
         return texture;
     }
-
-
     private static final  String TAG ="GLRender";
     GLSurfaceView.Renderer renderer =new GLSurfaceView.Renderer() {
-
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             L.e(TAG,"onSurfaceCreated");
@@ -48,22 +43,19 @@ public class GLRender {
 //            oesFilter.onSurfaceCreate();
 //            texture =oesFilter.surfaceTexture;
 //            textureId=Glutil.createOESTextureObject();
+//            glDrawer2D = new GLDrawer2D();
+//            glDrawer2D.init();
+//            textureId = GLDrawer2D.initTex();
+//            texture = new SurfaceTexture(textureId);
 
-            glDrawer2D = new GLDrawer2D();
-            glDrawer2D.init();
-            textureId = GLDrawer2D.initTex();
-            texture = new SurfaceTexture(textureId);
-
-
-//            oesFilter = new OesFilter();
-//            oesFilter.onSurfaceCreate();
-//            textureId = oesFilter.textureId;
-//            texture = oesFilter.surfaceTexture;
+            oesFilter = new OesFilter();
+            oesFilter.onSurfaceCreate();
+            textureId = oesFilter.textureId;
+            texture = oesFilter.surfaceTexture;
             if(null!=renderListner){
                 renderListner.onSurfaceCreated(gl,config);
             }
         }
-
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
             L.e(TAG,"onSurfaceChanged");
@@ -73,35 +65,29 @@ public class GLRender {
             if(null!=renderListner){
                 renderListner.onSurfaceChanged(gl,width,height);
             }
-
-//            oesFilter.onSurFaceChanged(width,height);
+            oesFilter.onSurFaceChanged(width,height);
         }
 
         @Override
-
         public void onDrawFrame(GL10 gl) {
             L.e(TAG,"onDrawFrame");
             GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
             texture.updateTexImage();
             texture.getTransformMatrix(mSTMatrix);
-//            oesFilter.draw(textureId,mSTMatrix);
-            glDrawer2D.draw(textureId, mSTMatrix);
+            oesFilter.draw(textureId,mSTMatrix);
+//            glDrawer2D.draw(textureId, mSTMatrix);
             if(null!=renderListner){
                 renderListner.onDrawFrame(gl);
             }
-
         }
     };
-
-
 
     public interface RenderListener{
         void onSurfaceCreated(GL10 gl, EGLConfig config);
         void onSurfaceChanged(GL10 gl, int width, int height);
         void onDrawFrame(GL10 gl);
     }
-
     public void setRenderListener(RenderListener listener){
 
         this.renderListner = listener;

@@ -1,5 +1,7 @@
 package com.infomedia.yunbain.filter;
 
+import android.opengl.GLES20;
+
 /**
  * Created by pc on 2018/1/9.
  */
@@ -13,19 +15,19 @@ public abstract class BaseFilter {
     public abstract void init();
 
     public void onSurfaceCreate(){
-
+        GLES20.glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
     }
 
     public void onSurFaceChanged(int width,int height){
         surfaceWidth= width;
         surfaceHeight = height;
-//        GLES20.glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+//
 //        GLES20.glClear(  GLES20.GL_COLOR_BUFFER_BIT);
-//        GLES20.glViewport(0, 0, surfaceWidth, surfaceHeight);
+        GLES20.glViewport(0, 0, surfaceWidth, surfaceHeight);
     }
 
     public void onDraw(float[]data){
-//        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
 
     }

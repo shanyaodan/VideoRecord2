@@ -38,10 +38,11 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
-         mOESTextureId = Glutil.createOESTextureObject();
+        mOESTextureId = Glutil.createOESTextureObject();
         mSurfaceTexture = new SurfaceTexture(mOESTextureId);
         mSurfaceTexture.setOnFrameAvailableListener(this);
         glDrawer2D = new GLDrawer2D();
+
     }
 
     @Override
